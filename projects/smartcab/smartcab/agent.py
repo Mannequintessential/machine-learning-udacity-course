@@ -2,6 +2,7 @@ import random
 import math
 from environment import Agent, Environment
 from planner import RoutePlanner
+from planner import RoutePlanner
 from simulator import Simulator
 
 class LearningAgent(Agent):
@@ -47,6 +48,7 @@ class LearningAgent(Agent):
         else:
 #             self.epsilon = self.epsilon - 0.05
             self.epsilon = 0.99**self.trial
+#             self.epsilon = 1/(self.trial**2)
             self.trial += 1
 
         return None
@@ -72,7 +74,7 @@ class LearningAgent(Agent):
         
         # Set 'state' as a tuple of relevant data for the agent        
         # check
-        state = (waypoint,inputs['light'])
+        state = (waypoint,inputs['light'],inputs['oncoming'],inputs['left'])
 
         return state
 
@@ -102,7 +104,7 @@ class LearningAgent(Agent):
         #   Then, for each action available, set the initial Q-value to 0.0
         # check
 
-        if state not in self.Q:
+        if self.learning==True and state not in self.Q:
 		    self.Q[state] = {None:0.0,'forward':0.0,'left':0.0,'right':0.0}
 			
         return
@@ -149,7 +151,8 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         # check
         
-        self.Q[state][action] = self.Q[state][action] + self.alpha*reward
+        if self.learning==True:
+            self.Q[state][action] = self.Q[state][action] + self.alpha*(reward-self.Q[state][action])
 
         return
 
@@ -178,7 +181,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment(verbose=True)
+    env = Environment()
     
     ##############
     # Create the driving agent
@@ -201,14 +204,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=0.01, log_metrics=True, display=False, optimized=True)
+    sim = Simulator(env, update_delay=0.01, log_metrics=True, display=False, optimized=False)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 10)
+    sim.run(n_test = 20)
 
 
 
