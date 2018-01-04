@@ -13689,7 +13689,7 @@ JEmSJNXCxJQkSZIkSZJqYWJKkiRJkiRJtfj/y7T6/20KBzkAAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>'waypoint' has 4 options, [north, east, south, west]. The 'light', 'left', and 'oncoming' input are binary. This means there are a possible 4x2x2x2, or 32 options. With this size of state space, training would be doable although it may be a little time consuming. Furthermore, taking out any of these features will decrease safety and/or efficiency!</p>
+<p>'waypoint' has 4 options, [north, east, south, west]. The 'light' is binary. 'left', and 'oncoming' input have the options: 'left','right','forward' or None. This means there are a possible 4x2x3x4, or 96 options. With this size of state space, training would be doable although it may be a little time consuming. Furthermore, taking out any of these features will decrease safety and/or efficiency!</p>
 
 </div>
 </div>
@@ -18571,7 +18571,7 @@ s7pwYMrMzMzMzMzMzOri/wPINf3LibTQsQAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>The optimal policy would be one that takes into account 'waypoint','light','oncoming', and 'left' and can safely and reliably reach its destination. It will do None if it cannot enter the intersection without getting into an accident. If it can, it will follow the waypoint and go in that direction.</p>
+<p>The optimal policy would be one that takes into account 'waypoint','light','oncoming', and 'left' and can safely and reliably reach its destination. It will do None if it cannot enter the intersection without getting into an accident. If it can, it will follow the waypoint and go in that direction. For example, if 'waypoint' is forward, 'light' is green and both 'oncoming' and 'left' are None, optimal policy would be to take action 'forward' as we know it would be safe and traffic rules dictate that it is an allowed action. Conversely, if 'waypoint' was 'left', 'light' was 'green', 'oncoming' was forward and 'left' was None, the agent should take action None to avoid getting into a collision with the oncoming car.</p>
 <p>Looking at the results from the improved Q-learning algorithm, state('right', 'red', None, 'forward') has values:</p>
 <ul>
 <li>forward : -39.56</li>
